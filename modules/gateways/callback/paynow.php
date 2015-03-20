@@ -1,114 +1,94 @@
 <?php
 
-# Required File Includes
-include("../../../dbconnect.php");
-include("../../../includes/functions.php");
-include("../../../includes/gatewayfunctions.php");
-include("../../../includes/invoicefunctions.php");
+// Include the important WHMCS functions.
+require("../../../init.php");
+$whmcs->load_function("functions");
+$whmcs->load_function("gateway");
+$whmcs->load_function("invoice");
 
-# Set to true to enable logging
-define('PN_DEBUG', false);
+// Get the gateway data from WHMCS
+$GATEWAY = getGatewayVariables("paynow");
 
-/**
- * pnlog
- *
- * Log function for logging output.
- *
- * @param $msg String Message to log
- * @param $close Boolean Whether to close the log file or not
- */
-function pnLog( $msg = '', $close = false ) {
-    static $fh = 0;
-    global $module;
-
-    // Only log if debugging is enabled
-    if( PN_DEBUG ) {
-        if( $close ) {
-            fclose( $fh );
-        } else {
-            // If file doesn't exist, create it
-            if( !$fh ) {
-                $pathinfo = pathinfo( __FILE__ );
-                $fh = fopen( $pathinfo['dirname'] .'/paynow.log', 'a+' );
-            }
-
-            // If file was successfully created
-            if( $fh ) {
-                $line = date( 'Y-m-d H:i:s' ) .' : '. $msg ."\n";
-
-                fwrite( $fh, $line );
-            }
-        }
-    }
+// Check if the gateway is enabled, else exit.
+if (!$GATEWAY['type']) {
+        exit("Module Not Activated");
 }
 
-pnLog( 'Callback Received: '. print_r( $_POST, true ) );
+// Log the RAW data received from Sage Paynow
+logModuleCall($GATEWAY['name'], 'Callback: Sage Paynow', '', print_r($_REQUEST, 1), '', '');
 
-$gatewaymodule = "paynow"; # Enter your gateway module name here replacing template
+// Get the parameters
+$TransactionAccepted = $whmcs->get_req_var("TransactionAccepted");
+$CardHolderIpAddr = $whmcs->get_req_var("CardHolderIpAddr");
+$RequestTrace = $whmcs->get_req_var("RequestTrace");
+$Reference = $whmcs->get_req_var("Reference");
+$Extra1 = $whmcs->get_req_var("Extra1");
+$Extra2 = $whmcs->get_req_var("Extra2");
+$Extra3 = $whmcs->get_req_var("Extra3");
+$Amount = $whmcs->get_req_var("Amount");
+$Reason = $whmcs->get_req_var("Reason");
+$Fee = 0; // To be used if the Sage Paynow API starts to return a fee for each transaction.
 
-$GATEWAY = getGatewayVariables($gatewaymodule);
-if (!$GATEWAY["type"]) die("Module Not Activated"); # Checks gateway module is active before accepting callback
+// Verify the callback using the Sage Paynow API.
+$RequestTraceURL = 'https://gateway.sagepay.co.za/transactionstatus';
+$RequestTraceQuery = 'RequestTrace='.urlencode($RequestTrace);
 
-pnLog( 'GATEWAY: '. print_r( $GATEWAY, true ) );
+// Check that we did receive Request Trace, otherwise assume some error.
+// This is to prevent some injections attacks against the callback.
+if (!empty($RequestTrace)) {
+	// Get the response from Sage Paynow.
+	$SageResponse = curlCall($RequestTraceURL, $RequestTraceQuery);
 
-# Get Returned Variables - Adjust for Post Variable Names from your Gateway's Documentation
-$status = $_POST["TransactionAccepted"];
+	// Decode the JSON response provided by Sage Paynow.
+	$SageData = json_decode($SageResponse);
 
-// Reference is sent as p2
-$matches = array();
-preg_match('/^(\d+)-(\d+)$/', $_POST["Reference"], $matches);
+	// Check that we received valid data from Sage Paynow.
+	if (!is_object($SageData)) {
+		logTransaction($GATEWAY['name'], $SageResponse, "ERROR: JSON Decode Error");
+		exit;
+	}
 
-$invoiceid = $matches[1];
-$transid = $_POST["RequestTrace"];
-$amount = $_POST["Amount"];
-$fee = "";
-$adminuser = $GATEWAY['whmcs_admin_username'];
+	// InvoiceID forms part of the Reference.
+	$Matches = array();
+	if (!preg_match('/^(\d+)-(\d+)$/', $Reference, $Matches)) {
+		logModuleCall($GATEWAY['name'], 'Get InvoiceID', $Reference, 'Failed', '', '');
+		exit("Invalid Reference Received.");
+	}
+	$InvoiceID = $Matches[1];
 
-$invoiceid = checkCbInvoiceID($invoiceid,$GATEWAY["name"]); # Checks invoice ID is a valid invoice number or ends processing
-
-pnLog( 'Invoice Id: '. print_r( $invoiceid, true ));
-pnLog( 'Status: '. print_r( $status, true ) . ' - ' .  gettype($status) );
-
-checkCbTransID($transid); # Checks transaction number isn't already in the database and ends processing if it does
-pnLog( 'checkCbTransID Called' );
-
-if ($status=="true") {
-    # Successful
-    pnLog( 'Transaction Successful' );
-
-    // addInvoicePayment($invoiceid, $transid, $amount, $fee, $gatewaymodule); # Apply Payment to Invoice: invoiceid, transactionid, amount paid, fees, modulename
-    $command = "addinvoicepayment";
-    $values = array();
-    $values["invoiceid"] = $invoiceid;
-    $values["transid"] = $transid;
-    $values["amount"] = $amount;
-    $values["fee"] = $fee;
-    $values["gateway"] = $GATEWAY['name'];
-    $values["date"] = $GATEWAY['name'];
-    $results = localAPI($command,$values,$adminuser);
-
-    pnLog( 'addinvoicepayment Result: '. print_r( $results, true ) );
-
-    logTransaction($GATEWAY["name"],$_POST,"Successful"); # Save to Gateway Log: name, data array, status
-
-    echo "<p>Payment was successful.</p>";
-    echo "<p>You will be redirected to the client area in 5 seconds. <a href='../../../clientarea.php'>Click here</a> to return immediately.</p>";
-    ?>
-
-    <script type="text/javascript">
-        setTimeout(function () {
-           window.location.href = "../../../clientarea.php";
-        }, 5000);
-    </script>
-    <?php
-    pnLog( 'Returning to clientarea.' );
-} else {
-    # Unsuccessful
-    pnLog( 'Transaction Unsuccessful' );
-    logTransaction($GATEWAY["name"],$_POST,"Unsuccessful"); # Save to Gateway Log: name, data array, status
-    echo "<p>Payment was declined. Reason: " . $_POST['Reason'] . "</p>";
-    echo "<p><a href='../../../cart.php'>Click here</a> to return to the cart.</p>";
+	// Check if the payment succeeded.
+	if (($TransactionAccepted == 'true') && ($SageData->TransactionAccepted == true)) {
+		// Payment Successful.
+		// Verify invoice ID.
+		$InvoiceID = checkCbInvoiceID($InvoiceID, $GATEWAY['name']);
+		// Check if we have received this notification before.
+		// checkCbTransID($RequestTrace); // Replaced by the functions below. 
+		$CheckResult = select_query("tblaccounts", "COUNT(*)", array("transid" => $RequestTrace));
+		$CheckData = mysql_fetch_array($CheckResult);
+		// If data is returned, then show the PAID invoice.
+		if ($CheckData[0]) {
+			// Redirect to the paid invoice.
+			header("Location: ".$CONFIG['SystemURL']."/viewinvoice.php?id=$InvoiceID&paymentsuccess=true");
+			exit;
+		}
+		// Add the payment to the invoice in WHMCS.
+		addInvoicePayment($InvoiceID, $RequestTrace, $Amount, $Fee, $GATEWAY['name']);
+		// Log the transaction for auditing purposes.
+		logTransaction($GATEWAY['name'], $_REQUEST, "Successful");
+		// Redirect to the paid invoice.
+		header("Location: ".$CONFIG['SystemURL']."/viewinvoice.php?id=$InvoiceID&paymentsuccess=true");
+		exit;
+	} else if (($TransactionAccepted == 'false') && ($SageData->TransactionAccepted == false)) {
+		// PaymentFailed
+		// Log the transaction for auditing purposes.
+		logTransaction($GATEWAY['name'], $_REQUEST, "Unsuccessful");
+		// Redirect to the unpaid invoice.
+		header("Location: ".$CONFIG['SystemURL']."/viewinvoice.php?id=$InvoiceID&paymentfailed=true&reason=".urlencode($Reason));
+		exit;
+	}
 }
-
-pnLog( 'Completed' );
-pnLog( '', true );
+// Log the transaction for auditing purposes.
+logTransaction($GATEWAY['name'], $_REQUEST, "Error");
+header("Location: ".$CONFIG['SystemURL']."/clientarea.php");
+exit;
+?>

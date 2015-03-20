@@ -1,7 +1,7 @@
 Sage Pay Now WHMCS Credit Card Gateway Module
 =============================================
 
-Revision 1.0.3
+Revision 1.5.0
 
 Introduction
 ------------
@@ -64,6 +64,7 @@ http://196.201.6.235/whmcs
 Revision History
 ----------------
 
+* 20 March 2015/1.5.0: Implemented callback verification for security. WHMCSfied the code.
 * 20 March 2015/1.0.3: Fixed RegEx for invoiceid.
 * 18 February 2015/1.0.2: Added WHMCS Admin User Name step to readme and correct file names
 * 11 May 2014/1.0.1: Added screenshot to readme, added to documentation
