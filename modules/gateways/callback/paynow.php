@@ -72,7 +72,7 @@ if (!empty($RequestTrace)) {
 			exit;
 		}
 		// Add the payment to the invoice in WHMCS.
-		addInvoicePayment($InvoiceID, $RequestTrace, $Amount, $Fee, $GATEWAY['name']);
+		addInvoicePayment($InvoiceID, $RequestTrace, $Amount, $Fee, $GATEWAY['name'], false, getTodaysDate());
 		// Log the transaction for auditing purposes.
 		logTransaction($GATEWAY['name'], $_REQUEST, "Successful");
 		// Redirect to the paid invoice.
