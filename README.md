@@ -1,7 +1,7 @@
 Sage Pay Now WHMCS Credit Card Gateway Module
 =============================================
 
-Revision 1.0.2
+Revision 1.5.2
 
 Introduction
 ------------
@@ -45,12 +45,15 @@ B. WHMCS Steps:
 2. Click Setup / Payments / Payment Gateways
 3. Activate the Module 'Pay Now'
 4. Type an appropriate display name such as 'MasterCard/Visa'
-5. Enter your Pay Now Service Key
-6. Enter an admin username for WHMCS Admin User Name. This is to utilise the localAPI() method.
-7. Click 'Send email' to have the Pay Now gateway send e-mail
-8. Click 'Save Changes'
+5. Enter your Pay Now 'Service Key'
+6. Click 'Support Budget Period' to allow the use of the credit card budget facility. (Default: No)
+7. Click 'Send Email' to have the Pay Now gateway send e-mail (Default: No)
+8. Make a note of the URL to use in your Sage Pay Now account for the Accept and Decline URLs
+9. Click 'Save Changes'
 
-You are now ready to transact. Remember to turn off "Make test mode active:" when you are ready to go live.
+You are now ready to transact. 
+
+Remember to turn off "Make test mode active:" when you are ready to go live in the Pay Now Gateway Server Configuration.
 
 Here is a screenshot of what the WHMCS settings screen for the Sage Pay Now configuration:
 ![alt tag](http://196.201.6.235/whmcs/whmcs_screenshot1.png)
@@ -64,6 +67,10 @@ http://196.201.6.235/whmcs
 Revision History
 ----------------
 
+* 23 March 2015/1.5.2: Removed API user requirement. Added setup guidance.
+* 21 March 2015/1.5.1: Fixed the addInvoicePayment() arguments.
+* 20 March 2015/1.5.0: Implemented callback verification for security. WHMCSfied the code.
+* 20 March 2015/1.0.3: Fixed RegEx for invoiceid.
 * 18 February 2015/1.0.2: Added WHMCS Admin User Name step to readme and correct file names
 * 11 May 2014/1.0.1: Added screenshot to readme, added to documentation
 * 05 Mar 2014/1.0.0: Added information on Pay Now server side configuration
