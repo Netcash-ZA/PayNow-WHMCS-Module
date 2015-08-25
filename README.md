@@ -36,8 +36,10 @@ Prerequisites:
 A. Pay Now Gateway Server Configuration Steps
 
 1. Log into your Pay Now Gateway Server configuration page
-2. Choose the following for your accept, decline, notify and redirect URLs:
+2. Choose the following for your accept, decline and notify URLs:
    http://whmcs_installation/modules/gateways/callback/paynow.php
+3. Choose the following for your redirect URL:
+	http://whmcs_installation/clientarea.php
 
 B. WHMCS Steps:
 
