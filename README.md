@@ -1,7 +1,7 @@
 Sage Pay Now WHMCS Credit Card Gateway Module
 =============================================
 
-Revision 1.0.2
+Revision 2.0.0
 
 Introduction
 ------------
@@ -36,7 +36,7 @@ Prerequisites:
 A. Pay Now Gateway Server Configuration Steps
 
 1. Log into your Pay Now Gateway Server configuration page
-2. Choose the following for both your accept and decline URLs:
+2. Choose the following for your accept, decline, notify and redirect URLs:
    http://whmcs_installation/modules/gateways/callback/paynow.php
 
 B. WHMCS Steps:
@@ -64,6 +64,7 @@ http://196.201.6.235/whmcs
 Revision History
 ----------------
 
+* 25 August 2015/2.0.0: Add support for Retail/EFT payments
 * 18 February 2015/1.0.2: Added WHMCS Admin User Name step to readme and correct file names
 * 11 May 2014/1.0.1: Added screenshot to readme, added to documentation
 * 05 Mar 2014/1.0.0: Added information on Pay Now server side configuration
