@@ -62,7 +62,7 @@ function paynow_link($params) {
 	$customerName = "{$params['clientdetails']['firstname']} {$params['clientdetails']['lastname']}";
 	$orderID = $invoiceid;
 	$customerID = $params ['clientdetails']['userid'];
-	$sageGUID = "TBC";
+	$sageGUID = "d783602-0f3c-4a19-9649-e2972cbb9eb6";
 
 	// Gateway submit code
 	// Refer to documentation
