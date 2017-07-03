@@ -54,15 +54,6 @@ B. WHMCS Steps:
 
 You are now ready to transact. Remember to turn off "Make test mode active:" when you are ready to go live.
 
-Here is a screenshot of what the WHMCS settings screen for the Sage Pay Now configuration:
-![alt tag](http://196.201.6.235/whmcs/whmcs_screenshot1.png)
-
-Demo Site
----------
-
-There is a demo site if you want to see WHMCS and the Sage Pay Now gateway in action:
-http://196.201.6.235/whmcs
-
 Revision History
 ----------------
 
