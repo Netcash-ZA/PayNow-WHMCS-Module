@@ -83,7 +83,7 @@ if ($status=="true") {
     $values["transid"] = $transid;
     $values["amount"] = $amount;
     $values["fee"] = $fee;
-    $values["gateway"] = $GATEWAY['name'];
+    $values["gateway"] = $gatewaymodule;
     $values["date"] = date('Y-m-d H:i:s');
     $results = localAPI($command,$values,$adminuser);
 
