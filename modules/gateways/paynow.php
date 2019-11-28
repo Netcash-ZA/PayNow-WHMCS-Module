@@ -4,33 +4,38 @@
  */
 function paynow_config() {
 	$configarray = array (
-			"FriendlyName" => array (
-					"Type" => "System",
-					"Value" => "Sage Pay Now"
-			),
-			"servicekey" => array (
-					"FriendlyName" => "Service Key",
-					"Type" => "text",
-					"Size" => "40"
-			),
-            "whmcs_admin_username" => array (
-                "FriendlyName" => "WHMCS Admin User Name",
-                "Type" => "text",
-                "Size" => "20",
-                "Description" => "Need an admin user name to use the local API, usually it's just 'admin'.",
-            ),
-			"sendemailconfirm" => array (
-					"FriendlyName" => "Send email",
-					"Type" => "yesno",
-					"Description" => "An email confirmation will be sent from the Pay Now gateway to the client after each transaction."
-			)
+		"FriendlyName" => array (
+			"Type" => "System",
+			"Value" => "Sage Pay Now"
+		),
+		"account_number" => array (
+			"FriendlyName" => "Account Number",
+			"Type" => "text",
+			"Size" => "40"
+		),
+		"service_key" => array (
+			"FriendlyName" => "Service Key",
+			"Type" => "text",
+			"Size" => "40"
+		),
+		"whmcs_admin_username" => array (
+			"FriendlyName" => "WHMCS Admin User Name",
+			"Type" => "text",
+			"Size" => "20",
+			"Description" => "Need an admin user name to use the local API, usually it's just 'admin'.",
+		),
+		"sendemailconfirm" => array (
+			"FriendlyName" => "Send email",
+			"Type" => "yesno",
+			"Description" => "An email confirmation will be sent from the Pay Now gateway to the client after each transaction."
+		)
 	);
 	return $configarray;
 }
 function paynow_link($params) {
 
 	// Gateway Specific Variables
-	$m1_PayNowServiceKey = $params ['servicekey'];
+	$m1_PayNowServiceKey = $params ['service_key'];
 	// Software vendor key is the hard coded for Pay Now Online web software requests
 	$m2_SoftwareVendorKey = "24ade73c-98cf-47b3-99be-cc7b867b3080";
 
@@ -72,16 +77,20 @@ function paynow_link($params) {
 				<input type="hidden" name="p2" value="' . $p2_UniqueRef . '" />
 
 				<input type="hidden" name="p3" value="' . "{$customerName} | {$orderID}" . '" />
-				<input type="hidden" name="m3" value="' . $sageGUID . '" />
-				<input type="hidden" name="m4" value="' . $customerID . '" />
-
 				<input type="hidden" name="p4" value="' . $p4_Amount . '" />
+
 				<input type="hidden" name="Budget" value="' . $Budget . '" />
+
+				<input type="hidden" name="m3" value="' . $sageGUID . '" />
+
+				<input type="hidden" name="m4" value="' . $customerID . '" />
 				<input type="hidden" name="m5" value="' . $m5_Extra2 . '" />
 				<input type="hidden" name="m6" value="' . $m6_Extra3 . '" />
+
 				<input type="hidden" name="m9" value="' . $m9_CardHolder . '" />
 				<input type="hidden" name="m10" value="' . $m10_ReturnText . '" />
-<input type="submit" value="Pay" />
+
+				<input type="submit" value="Pay" />
 </form>';
 
 	return $code;
