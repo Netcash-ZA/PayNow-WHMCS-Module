@@ -6,7 +6,7 @@ function paynow_config() {
 	$configarray = array (
 		"FriendlyName" => array (
 			"Type" => "System",
-			"Value" => "Sage Pay Now"
+			"Value" => "Netcash Pay Now"
 		),
 		"account_number" => array (
 			"FriendlyName" => "Account Number",
@@ -67,11 +67,11 @@ function paynow_link($params) {
 	$customerName = "{$params['clientdetails']['firstname']} {$params['clientdetails']['lastname']}";
 	$orderID = $invoiceid;
 	$customerID = $params ['clientdetails']['userid'];
-	$sageGUID = "d783602-0f3c-4a19-9649-e2972cbb9eb6";
+	$netcashGUID = "d783602-0f3c-4a19-9649-e2972cbb9eb6";
 
 	// Gateway submit code
 	// Refer to documentation
-	$code = '<form action="https://paynow.sagepay.co.za/site/paynow.aspx" method="post">
+	$code = '<form action="https://paynow.netcash.co.za/site/paynow.aspx" method="post">
 				<input type="hidden" name="m1" value="' . $m1_PayNowServiceKey . '" />
 				<input type="hidden" name="m2" value="' . $m2_SoftwareVendorKey . '" />
 				<input type="hidden" name="p2" value="' . $p2_UniqueRef . '" />
@@ -81,7 +81,7 @@ function paynow_link($params) {
 
 				<input type="hidden" name="Budget" value="' . $Budget . '" />
 
-				<input type="hidden" name="m3" value="' . $sageGUID . '" />
+				<input type="hidden" name="m3" value="' . $netcashGUID . '" />
 
 				<input type="hidden" name="m4" value="' . $customerID . '" />
 				<input type="hidden" name="m5" value="' . $m5_Extra2 . '" />
@@ -89,6 +89,7 @@ function paynow_link($params) {
 
 				<input type="hidden" name="m9" value="' . $m9_CardHolder . '" />
 				<input type="hidden" name="m10" value="' . $m10_ReturnText . '" />
+				<input type="hidden" name="m14" value="" />
 
 				<input type="submit" value="Pay" />
 </form>';
