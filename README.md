@@ -1,4 +1,4 @@
-Sage Pay Now WHMCS Credit Card Gateway Module
+Netcash Pay Now WHMCS Credit Card Gateway Module
 =============================================
 
 Revision 2.0.0
@@ -6,13 +6,13 @@ Revision 2.0.0
 Introduction
 ------------
 
-A third party credit card gateway integration that works with Sage Pay South Africa's Pay Now product.
+A third party credit card gateway integration that works with Netcash South Africa's Pay Now product.
 
 Installation Instructions
 -------------------------
 
 Download the files from here:
-* https://github.com/SagePay/PayNow-WHMCS/archive/master.zip
+* https://github.com/Netcash-ZA/PayNow-WHMCS-Module/archive/master.zip
 
 Copy the following two files from the archive:
 
@@ -29,8 +29,8 @@ Configuration
 
 Prerequisites:
 
-* Sage Pay Now login credentials
-* Sage Pay Now Service Key
+* Netcash Pay Now login credentials
+* Netcash Pay Now Service Key
 * WHMCS login credentials
 
 A. Pay Now Gateway Server Configuration Steps
@@ -53,31 +53,3 @@ B. WHMCS Steps:
 8. Click 'Save Changes'
 
 You are now ready to transact. Remember to turn off "Make test mode active:" when you are ready to go live.
-
-Revision History
-----------------
-
-* 25 August 2015/2.0.0: Add support for Retail/EFT payments
-* 18 February 2015/1.0.2: Added WHMCS Admin User Name step to readme and correct file names
-* 11 May 2014/1.0.1: Added screenshot to readme, added to documentation
-* 05 Mar 2014/1.0.0: Added information on Pay Now server side configuration
-* 05 Mar 2014/1.0.0: First version
-
-Tip
----
-
-* You can assign default WHMCS payment methods per Product Group.
-* Remember to take your WHMCS Gateway Server Configuration out of test mode
-
-References
-----------
-
-WHMCS has a detailed and easy to use payment gateway integration guide:
-* http://docs.whmcs.com/Payment_Gateways
-
-Feedback, issues, comments, suggestions
----------------------------------------
-
-We welcome your feedback.
-
-If you have any comments or questions please contact Sage Pay South Africa or log the issue on GitHub.
