@@ -29,13 +29,13 @@ Configuration
 
 Prerequisites:
 
-* Netcash Pay Now login credentials
+* Netcash login credentials
 * Netcash Pay Now Service Key
 * WHMCS login credentials
 
 A. Pay Now Gateway Server Configuration Steps
 
-1. Log into your Pay Now Gateway Server configuration page
+1. Log into your Netcash Account
 2. Choose the following for your accept, decline and notify URLs:
    http://whmcs_installation/modules/gateways/callback/paynow.php
 3. Choose the following for your redirect URL:
