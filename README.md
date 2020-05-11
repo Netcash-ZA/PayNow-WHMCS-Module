@@ -1,4 +1,4 @@
-THIS PLUGIN IS NO LONGER SUPPORTED BY NETCASH
+This version is only compatible with V.7+ of WHMCS
 ====
 
 Netcash Pay Now WHMCS Credit Card Gateway Module
