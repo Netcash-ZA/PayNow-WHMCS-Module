@@ -1,3 +1,6 @@
+This version is only compatible with V.7+ of WHMCS
+====
+
 Netcash Pay Now WHMCS Credit Card Gateway Module
 =============================================
 
@@ -29,13 +32,32 @@ Configuration
 
 Prerequisites:
 
-* Netcash Pay Now login credentials
-* Netcash Pay Now Service Key
-* WHMCS login credentials
+You will need:
+* Netcash account
+* Pay Now service activated
+* Netcash account login credentials (with the appropriate permissions setup)
+* Netcash - Pay Now Service key
+* Cart admin login credentials
+
+A. Netcash Account Configuration Steps:
+1. Log into your Netcash account:
+	https://merchant.netcash.co.za/SiteLogin.aspx
+2. Type in your Username, Password, and PIN
+2. Click on ACCOUNT PROFILE on the top menu
+3. Select NETCONNECTOR from tghe left side menu
+4. Click on PAY NOW from the subsection
+5. ACTIVATE the Pay Now service
+6. Type in your EMAIL address
+7. It is highly advisable to activate test mode & ignore errors while testing
+8. Select the PAYMENT OPTIONS required (only the options selected will be displayed to the end user)
+9. Remember to remove the "Make Test Mode Active" indicator to accept live payments
+
+* For immediate assistance contact Netcash on 0861 338 338
+
 
 A. Pay Now Gateway Server Configuration Steps
 
-1. Log into your Pay Now Gateway Server configuration page
+1. Log into your Netcash Account
 2. Choose the following for your accept, decline and notify URLs:
    http://whmcs_installation/modules/gateways/callback/paynow.php
 3. Choose the following for your redirect URL:
